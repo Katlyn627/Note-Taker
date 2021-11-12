@@ -1,65 +1,53 @@
-const fs = require('fs');
+const fs = require("fs");
+var data = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+
 
 module.exports = function(app) {
-  // Created routes one to the index page and one to the notes page
-  app.get('/api/notes', function(req, res) {
-    fs.readFile('./db/db.json', (err, data) => {
-      if (err) throw err;
-      dbData = JSON.parse(data);
-      res.send(dbData);
+
+    app.get("/api/notes", function(req, res) {
+       
+        res.json(data);
+
     });
-  });
 
-  // Created API post request
+    app.get("/api/notes/:id", function(req, res) {
 
-  app.post('/api/notes', function(req, res) {
-    const userNotes = req.body;
+        res.json(data[Number(req.params.id)]);
 
-    fs.readFile('./db/db.json', (err, data) => {
-      if (err) throw err;
-      dbData = JSON.parse(data);
-      dbData.push(userNotes);
-      let number = 1;
-      dbData.forEach((note, index) => {
-        note.id = number;
-        number++;
-        return dbData;
-      });
-      console.log(dbData);
-
-      stringData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/db.json', stringData, (err, data) => {
-        if (err) throw err;
-      });
     });
-    res.send('Thank you for your note!');
-  });
 
-  // API route that allows user to delete a note 
-  app.delete('/api/notes/:id', function(req, res) {
-    // Gets id of the note to be deleted
-    const deleteNote = req.params.id;
-    console.log(deleteNote);
 
-    fs.readFile('./db/db.json', (err, data) => {
-      if (err) throw err;
+    app.post("/api/notes", function(req, res) {
 
-      // Compares each ID to the note to be deleted
-      dbData = JSON.parse(data);
-      for (let i = 0; i < dbData.length; i++) {
-        if (dbData[i].id === Number(deleteNote)) {
-          dbData.splice([i], 1);
+        let newNote = req.body;
+        let uniqueId = (data.length).toString();
+        console.log(uniqueId);
+        newNote.id = uniqueId;
+        data.push(newNote);
+        
+        fs.writeFileSync("./db.db.json", JSON.stringify(data), function(err) {
+            if (err) throw (err);        
+        }); 
+
+        res.json(data);    
+
+    });
+
+    
+    app.delete("/api/notes/:id", function(req, res) {
+
+        let noteId = req.params.id;
+        let newId = 0;
+        console.log(`Deleting note with id ${noteId}`);
+        data = data.filter(currentNote => {
+           return currentNote.id != noteId;
+        });
+        for (currentNote of data) {
+            currentNote.id = newId.toString();
+            newId++;
         }
-      }
-      console.log(dbData);
-      stringData = JSON.stringify(dbData);
+        fs.writeFileSync("./db/db.json", JSON.stringify(data));
+        res.json(data);
+    }); 
 
-      fs.writeFile('./db/db.json', stringData, (err, data) => {
-        if (err) throw err;
-      });
-    });
-    // Express response.status(204)
-    res.status(204).send();
-  });
-};
+}

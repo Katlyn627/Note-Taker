@@ -1,24 +1,26 @@
-// Created inquirer variable for express route
-const express = require('express');
+// Dependencies
+// =============================================================
+const express = require("express");
+const fs = require("fs");
 
-// Created app variable to set initial port
 
-const app = express();
+// Sets up the Express App
+// =============================================================
+var app = express();
+var PORT = process.env.PORT || 8080
 
-// Setting initial port
-const PORT = process.env.PORT || 3000;
-
-// Setting up express app for routes
+// Sets up the Express app to handle data parsing
+// =============================================================
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use("/assets", express.static("./assets"));
 
-// Creating routes for HTML and API for note taking app
-require('./routes/apiroutes')(app);
-require('./routes/htmlroutes')(app);
 
-//Created a listener function to start the app
+require("./routes/htmlroutes")(app);
+require("./routes/apiroutes")(app);
 
+// Starts the server to begin listening
+// =============================================================
 app.listen(PORT, function() {
-  console.log(`Server is listening on PORT: ${PORT}`);
+    console.log("App listening on PORT " + PORT);
 });
