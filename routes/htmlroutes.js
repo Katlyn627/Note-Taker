@@ -8,11 +8,11 @@ module.exports = function(app) {
   });
 
   app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, '../public\index.html'));
   });
 
   // If no matching route for note is found default to index
   app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, '../public\index.html'));
   });
 };

@@ -4,7 +4,8 @@
   "description": "Note Taker",
   "main": "index.js",
   "dependencies": {
-    "inquirer": "^8.2.0"
+    "inquirer": "^8.2.0",
+    "node.js": "0.0.1-security"
   },
   "devDependencies": {},
   "scripts": {
