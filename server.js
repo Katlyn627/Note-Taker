@@ -14,8 +14,8 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Creating routes for HTML and API for note taking app
-require('./routes/apiroute')(app);
-require('./routes/htmlroute')(app);
+require('./routes/apiroutes')(app);
+require('./routes/htmlroutes')(app);
 
 //Created a listener function to start the app
 
